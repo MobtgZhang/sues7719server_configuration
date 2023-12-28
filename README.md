@@ -14,6 +14,9 @@
 - [ ] LaTeX安装教程；
 - [ ] 大模型部署方法。
 
+## OverLeaf 地址
+[OverLeaf](https://www.overleaf.com/read/jybwscvybvmt#82b66b)
+
 ## License
 
 本模板发布遵循GNU General Public License v3.0 。
