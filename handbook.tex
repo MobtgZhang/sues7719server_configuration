@@ -1169,9 +1169,117 @@ Julia 的语法简洁、灵活，易于学习和使用。它支持面向对象�
 Julia 是一个开源项目，拥有活跃的社区支持。它可以在多个操作系统上运行，并且可以与其他编程语言（如Python、C、R）进行无缝集成，使得它成为科学计算和数据分析领域的一种强大工具。
 所以在深度学习环境中，Julia也是一个非常好的选择。
 \subsubsection{Julia环境安装}
+安装wget：
+\begin{lstlisting}[language=bash]
+  sudo apt update
+  sudo apt upgrade
+  sudo apt install wget apt-transport-https gnupg2 software-properties-common
+\end{lstlisting}
+
+默认情况下，JuliaLang 在 Ubuntu 22.04 基本存储库中不可用。
+现在运行以下命令，下载 JuliaLang 二进制文件包，并且解压缩：
+\begin{lstlisting}[language=bash]
+  wget https://julialang-s3.julialang.org/bin/linux/x64/1.8/julia-1.8.2-linux-x86_64.tar.gz
+  tar zxvf julia-1.8.2-linux-x86_64.tar.gz
+  sudo mv julia-1.8.2 /opt/julia # 二进制文件包解压缩到 /opt/julia 目录
+  sudo ln -s /opt/julia/bin/julia /usr/local/bin/julia # 创建软链接
+\end{lstlisting}
+这样就完成了Julia的安装。
+
+由于Julia的包管理器下载速度比较慢，所以我们需要修改Julia的包管理器的镜像源站为国内镜像站，这里我们选择的是MirrorZ镜像站。
+有两种方式：
+\begin{enumerate}[label=\arabic*). ]
+  \item \textbf{临时使用：}不同系统和命令行下设置环境变量的方式各不相同，在命令行下可以通过以下方式来临时修改环境变量。
+
+  Linux Bash：
+\begin{lstlisting}[language=bash]
+  export JULIA_PKG_SERVER=https://mirrors.cernet.edu.cn/julia
+\end{lstlisting}
+
+  Windows Powershell：
+\begin{lstlisting}[language=bash]
+  $env:JULIA_PKG_SERVER = 'https://mirrors.cernet.edu.cn/julia'
+\end{lstlisting}
+
+  也可以利用 JuliaCN 社区维护的中文本地化工具包 JuliaZH 来进行切换：
+\begin{lstlisting}[language=bash]
+  julia> using Pkg
+  julia> Pkg.add("JuliaZH")
+  julia> using JuliaZH
+  julia> JuliaZH.setmirror("https://mirrors.cernet.edu.cn/julia")
+\end{lstlisting}
+  \item \textbf{永久使用：} 不同系统和命令行下永久设定环境变量的方式也不相同，
+  例如 Linux Bash 下可以通过修改 ~/.bashrc 文件实现该目的：
+\begin{lstlisting}[language=bash]
+  # ~/.bashrc
+  export JULIA_PKG_SERVER=https://mirrors.cernet.edu.cn/julia
+\end{lstlisting}
+
+  此外，这里再提供一种针对 Julia 的全平台通用的方式：\verb|JULIA_DEPOT_PATH/config/startup.jl| ( 默认为 ~/.julia/config/startup.jl ) 文件定义了每次启动 Julia 时都会执行的命令，编辑该文件，添加以下内容即可：
+\begin{lstlisting}[language=bash]
+  # ~/.julia/config/startup.jl
+  ENV["JULIA_PKG_SERVER"] = "https://mirrors.cernet.edu.cn/julia"
+\end{lstlisting}
+
+  也可以选择使用 JuliaZH 来一键修改/创建 startup.jl 文件：
+\begin{lstlisting}[language=bash]
+  # 以 BFSU 镜像站为例
+  julia> JuliaZH.generate_startup("default")
+  ┌ Info: 添加 PkgServer
+  │   服务器地址 = "https://pkg.julialang.org"
+  └   配置文件 = "/root/.julia/config"
+  
+  julia> JuliaZH.generate_startup("BFSU")
+  ┌ Info: 更新 PkgServer
+  │   原服务器地址 = "https://pkg.julialang.org"
+  │   新服务器地址 = "https://mirrors.bfsu.edu.cn/julia"
+  └   配置文件 = "/root/.julia/config"
+\end{lstlisting}
+  
+  若要临时禁止，可以通过 julia --startup-file=no 来取消执行 startup.jl 文件。
+\end{enumerate}
+
 
 \subsubsection{Flux ML 安装}
+Flux.jl是一个内置于Julia的机器学习框架。它与PyTorch有一些相似之处，就像大多数现代框架一样。
+Flux是一种优雅的机器学习方法。 它是100％纯Julia堆栈形式，并在Julia的原生GPU和AD支持之上提供轻量级抽象。
+Flux是一个用于机器学习的库。 它功能强大，具有即插即拔的灵活性，即内置了许多有用的工具，但也可以在需要的地方使用Julia语言的全部功能。
+
+Flux有以下的特点：
+\begin{enumerate}[label=\arabic*)]
+  \item Flux对于正则化或嵌入等功能的显式API相对较少。 相反，写下数学形式将起作用 ，并且速度很快。
+  \item 所有的知识和工具，从LSTM到GPU内核，都是简单的Julia代码。 如果有疑问的话，可以查看官方教程。 如果需要不同的函数块或者是功能模块，我们也可以轻松自己动手实现。
+  \item Flux适用于Julia库，包括从数据帧和图像到差分方程求解器等等内容，因此我们也可以轻松构建集成Flux模型的复杂数据处理流水线。
+\end{enumerate}
+
+安装方式如下所示：
+\begin{lstlisting}[language=bash]
+  julia> using Pkg
+  julia> Pkg.add("Flux")  # Flux 支持包
+  julia> Pkg.add("CuArrays")  # CUDA加速包
+  julia> Pkg.add("Metalhead")
+  julia> Pkg.add("Images") # 图像处理的工具包
+  julia> Pkg.add("Statistics") # 一些依赖项
+\end{lstlisting}
+
 \subsubsection{其他一些包环境}
+类比于Pytorch，Flux也有很多的生态系统，这里列举一些需要安装的一些常用的库，如下列举的一些库：
+\begin{itemize}
+  \item \textbf{Transformers.jl：}自然语言处理库；
+  \item \textbf{GraphNeuralNetworks.jl：}图神经网络库；
+  \item \textbf{DifferentialEquations.jl：}微分方程库；
+  \item \textbf{Optim.jl：}优化库；
+  \item \textbf{Distributions.jl：}概率分布库；
+  \item \textbf{Plots.jl：}数据可视化库；
+  \item \textbf{DataFrames.jl：}数据处理库；
+  \item \textbf{CSV.jl：}CSV文件处理库；
+  \item \textbf{JSON.jl：}JSON文件处理库；
+\end{itemize}
+
+相关教程链接（FQ）：\url{https://fluxml.ai/Flux.jl/stable/} ；
+
+模型代码示例链接：\url{https://github.com/FluxML/model-zoo/}
+
 \subsection{Rust深度学习环境配置（选看）}
 \subsubsection{Rust环境安装}
 \subsubsection{Candle深度学习环境安装}
