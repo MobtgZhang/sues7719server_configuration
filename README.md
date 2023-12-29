@@ -8,10 +8,16 @@
 - [x] SSH远程登录配置；
 - [x] 深度学习环境配置；
 - [ ] 深度学习框架环境安装
+  - [x] Python语言
+  - [ ] Julia语言
+  - [ ] Rust语言
+  - [ ] Go语言
+  - [x] Lua语言
+  - [ ] Java语言
 - [x] 远程登录工具使用；
 - [x] Docker使用；
 - [x] WSL2使用；
-- [ ] LaTeX安装教程；
+- [x] LaTeX安装教程；
 - [ ] 大模型部署方法。
 
 ## OverLeaf 地址

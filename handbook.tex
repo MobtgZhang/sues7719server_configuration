@@ -1184,7 +1184,7 @@ https://github.com/neuronika/neuronika
 \subsection{Go深度学习环境配置（选看）}
 \subsubsection{Go语言环境安装}
 \subsubsection{Gorgonia深度学习环境安装}
-\subsection{lua深度学习环境配置（选看）}
+\subsection{Lua深度学习环境配置（选看）}
 \subsubsection{torch7深度学习环境安装}
 Torch7是一种用于深度学习的开源框架，它基于Lua编程语言。
 它提供了一个强大且灵活的工具集合，用于构建和训练深度神经网络模型。
@@ -1301,6 +1301,7 @@ Lua语言中有一个包管理器luarocks，可以通过luarocks安装一些必�
 \subsubsection{TensorFlow在Android上的使用}
 \subsubsection{Pytorch在Android上的使用}
 \subsubsection{DeepLearning4j深度学习环境安装}
+\subsubsection{Node4j深度学习环境安装}
 \subsubsection{其他一些环境}
 \section{远程登录工具使用}
 \subsection{公网远程连接桌面工具}
@@ -1917,17 +1918,179 @@ WSL2是WSL的第二代，它是一个完全重新设计的版本，基于虚拟�
 \end{lstlisting}
 
 这里不再做过多介绍，服务器主要以Ubuntu等Linux系统为主，Docker功能比WSL2强大很多，所以不再赘述。
-\section{LaTeX 安装教程}
+\section{\LaTeX{} 安装教程}
+\TeX{}是一种由美国计算机教授高德纳（Donald Ervin Knuth）编写的排版软件，主要用于生成高质量的结构化文档（尤其是科学、数学和技术文档），它也被用于生成中等规模的书籍。
+它因其在生成复杂数学公式方面的强大功能而广泛用于排版学术期刊。
+它也被用于生成中等规模的书籍，如《The \TeX{}book》和《The \LaTeX{} Companion》。
+它是自由软件，也是一种自由软件标准——任何人都可以自由地使用和改变它的源代码，但是在修改后的代码上仍然必须保留其发布时的版权。
+高德纳教授在1989年宣布不再对\TeX{}作任何修改，因此\TeX{}的当前版本是3.1415926，而不是3.0。
+
+\TeX{} 的发音为“tech”，/ˈtɛx/（英语中的“ch”发音为/tʃ/，如英语中的“church”）。\TeX{}的拼写与希腊语中$\tau\epsilon\chi$的拼写相同，意思是“艺术”或“技术”。
+
 \subsection{LaTeX安装与配置}
+TexLive下载，可以到镜像站下载对应的\LaTeX{} 安装文件，这里以清华大学镜像站\footnote{\url{https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/Images/}}为例子，
+如图\ref{fig:texlive}所示：
+\begin{figure}[hbpt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{texlive.jpg}
+  \caption{TexLive下载}
+  \label{fig:texlive}
+\end{figure}
+
+对于Windows系统，点击install-tl-windows.bat，按照步骤安装即可。
+对于Linux系统，打开终端，进入到下载的文件夹，然后执行以下的命令：
+\begin{lstlisting}[language=bash]
+  sudo ./install-tl
+\end{lstlisting}
+然后按照步骤安装即可。
+
+TexStudio下载：
+TexStudio也可以在清华大学镜像站\footnote{\url{https://mirrors.tuna.tsinghua.edu.cn/github-release/texstudio-org/texstudio/LatestRelease/}}下载，如图\ref{fig:texstudio}所示：
+\begin{figure}[hbpt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{texstudio.jpg}
+  \caption{TexStudio下载}
+  \label{fig:texstudio}
+\end{figure}
+
+对于Windows系统来说，直接点击EXE文件，按照步骤安装即可。
+
+笔者建议使用VSCode\footnote{\url{https://code.visualstudio.com/}}作为LaTeX的编辑器，VSCode可以很高效地进行LaTeX的编辑，而且可以很方便地进行开发。
+在插件管理器中搜索LaTex Workshop，安装即可，如图\ref{fig:latex-workshop}所示。
+\begin{figure}[hbpt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{latex-workshop.jpg}
+  \caption{LaTex Workshop插件}
+  \label{fig:latex-workshop}
+\end{figure}
+
+刚安装的LaTeX Workshop插件默认是没有配置的，需要进行配置。
+File -> Preferences -> Settings，搜索latex，找到LaTeX Workshop，然后点击Edit in settings.json。
+然后在settings.json中添加以下的配置作参考：
+\begin{lstlisting}[language=python]
+  "latex-workshop.latex.tools": [
+        {
+            // 编译工具和命令
+            "name": "xelatex",
+            "command": "xelatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "-pdf",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "pdflatex",
+            "command": "pdflatex",
+            "args": [
+                "-synctex=1",
+                "-interaction=nonstopmode",
+                "-file-line-error",
+                "%DOCFILE%"
+            ]
+        },
+        {
+            "name": "bibtex",
+            "command": "bibtex",
+            "args": [
+                "%DOCFILE%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "xelatex",
+            "tools": [
+                "xelatex"
+            ],
+        },
+        {
+            "name": "pdflatex",
+            "tools": [
+                "pdflatex"
+            ]
+        },
+        {
+            "name": "xe->bib->xe->xe",
+            "tools": [
+                "xelatex",
+                "bibtex",
+                "xelatex",
+                "xelatex"
+            ]
+        },
+        {
+            "name": "pdf->bib->pdf->pdf",
+            "tools": [
+                "pdflatex",
+                "bibtex",
+                "pdflatex",
+                "pdflatex"
+            ]
+        }
+    ],
+    "latex-workshop.view.pdf.viewer": "tab",
+    "latex-workshop.latex.autoBuild.run": "never",
+\end{lstlisting}
 \subsection{在线LaTeX编辑器}
-Overleaf、TexPage、
-https://math-editor.online/
+有很多在线可以使用的LaTeX编辑器，这里介绍最为常用的两个：
+Overleaf在线编辑器\footnote{\url{https://www.overleaf.com/}}、TexPage在线编辑器\footnote{\url{https://www.texpage.com/}}，如图所示：
 
-https://www.codecogs.com/latex/eqneditor.php
+\begin{figure}[hbpt]
+  \subfloat[OverLeaf编辑器]{
+    \includegraphics[width=0.45\textwidth]{overleaf.jpg}
+  }
+  \subfloat[TexPage编辑器]{
+    \includegraphics[width=0.45\textwidth]{texpage.jpg}
+  }
+  \caption{在线LaTeX编辑器}
+  \label{fig:online-latex-editor}
+\end{figure}
 
-https://www.tablesgenerator.com/
+其中TexPage是国内的在线LaTeX编辑器，Overleaf是国外的在线LaTeX编辑器，Overleaf的功能更加强大，但是TexPage的速度更快。
+有很多LaTeX小白不会用LaTeX语法写自己的数学公式，可以通过Math-Editor\footnote{\url{https://math-editor.online/}}
+或者Equation editor\footnote{\url{https://www.codecogs.com/latex/eqneditor.php}}，如图\ref{fig:online-latex-equation-editor}所示：
+\begin{figure}[hbpt]
+  \subfloat[Math-Editor]{
+    \includegraphics[width=0.45\textwidth]{math-editor.jpg}
+  }
+  \subfloat[Equation editor]{
+    \includegraphics[width=0.45\textwidth]{equation-editor.jpg}
+  }
+  \caption{在线LaTeX公式编辑器}
+  \label{fig:online-latex-equation-editor}
+\end{figure}
+
+还有就是在线表格编辑器，例如Table Generator\footnote{\url{https://www.tablesgenerator.com/}}可以先在Excel表格中设计好自己的表格以及表格中的信息，然后直接复制到在线表格编辑器中，就可以得到对应的LaTeX表格代码了，如图\ref{fig:online-latex-table}所示：
+\begin{figure}[hbpt]
+  \centering
+  \includegraphics[width=0.8\textwidth]{table-generator.jpg}
+  \caption{在线表格生成}
+  \label{fig:online-latex-table}
+\end{figure}
+
 % Overleaf、TexPage、ShareLaTeX、Papeeria、Authorea、LaTeX Base、LaTeX Lab、MonkeyTeX、Verbosus、ScribTeX、LaTeX Online Editor、LaTeX Equation Editor、LaTeX Equation Editor、
 \subsection{Typst安装与配置（选看）}
+Typst 是一门很新的语言，是面向出版与学术写作的可编程标记语言，从 2023 年 4 月正式开源，目前已经较为成熟稳定了许多，有了更好的中文与 CJK 语言的支持，能干的事情也变得多了起来。
+安装方式如下所示：
+对于Windows系统，在命令行中使用winget下载Typst，如下所示：
+\begin{lstlisting}[language=bash]
+  winget install --id=Typst.Typst
+\end{lstlisting}
+
+对于Linux系统，可以直接从Typst的GitHub\footnote{\url{https://github.com/typst/typst}}下载对应的Typst Linux安装包。
+\begin{lstlisting}[language=bash]
+  wget https://github.com/typst/typst/releases/download/v0.10.0/typst-x86_64-unknown-linux-musl.tar.xz
+  tar -xvf typst-x86_64-unknown-linux-musl.tar.xz
+  sudo cp typst /usr/local/bin
+\end{lstlisting}
+
+VSCode 中下载插件Typst LSP、Typst Preview和Typst Sync。
+Typst LSP 是 Typst 的语言服务器，Typst Preview 是 Typst 的预览插件，Typst Sync 是 Typst 的同步插件。
+然后就可以使用Typst了，Typst的语法与LaTeX类似，但是更加简洁，更加容易上手。
+
 \section{大模型部署方法}
 \subsection{普通CPU部署方法（全平台）}
 \subsection{使用Intel 处理器部署（Intel 10代以上CPU）}
